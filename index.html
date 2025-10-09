@@ -764,16 +764,29 @@
                 const result = await response.json();
                 
                 if (result.ok) {
+                    // Debug: Log the first item to see column names
+                    if (result.data.length > 0) {
+                        console.log('Sample data item:', result.data[0]);
+                        console.log('Available columns:', Object.keys(result.data[0]));
+                    }
+                    
                     // Filter data based on selected offer
                     const filteredData = result.data.filter(item => {
                         if (currentAdminOffer === 'individual') {
-                            return item.mo_individualtraining === true;
+                            // Check multiple possible column names
+                            return item.mo_individualtraining === true || 
+                                   item['Mo Training'] === true ||
+                                   item['mo_individualtraining'] === true;
                         } else if (currentAdminOffer === 'homework') {
-                            return item.do_hausaufgabenhilfe === true;
+                            // Check multiple possible column names
+                            return item.do_hausaufgabenhilfe === true ||
+                                   item['Do Hausaufgaben'] === true ||
+                                   item['do_hausaufgabenhilfe'] === true;
                         }
                         return false;
                     });
                     
+                    console.log(`Filtered ${filteredData.length} items for offer: ${currentAdminOffer}`);
                     renderTable(filteredData);
                     showMessage(`${filteredData.length} Anmeldungen geladen.`, 'success');
                 } else {
