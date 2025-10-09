@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Vicky Anmeldungsseite - Sporttraining</title>
     <style>
         * {
@@ -335,34 +335,203 @@
         }
 
         @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
             .container {
-                margin: 10px;
+                margin: 0;
                 border-radius: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .header {
+                padding: 20px;
+                border-radius: 10px 10px 0 0;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+            
+            .header-logo {
+                width: 60px;
+                height: 60px;
+                margin-bottom: 10px;
             }
             
             .content {
                 padding: 20px;
             }
             
-            .header {
+            .offer-selection {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .offer-card {
+                margin-bottom: 0;
                 padding: 20px;
             }
             
-            .header h1 {
-                font-size: 2em;
+            .offer-card h3 {
+                font-size: 1.3em;
             }
             
-            .admin-controls {
-                flex-direction: column;
+            .form-group {
+                margin-bottom: 20px;
             }
             
-            .admin-controls input {
-                min-width: 100%;
+            .form-group label {
+                font-size: 1em;
+                margin-bottom: 8px;
+            }
+            
+            input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+                padding: 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .btn {
+                padding: 15px 30px;
+                font-size: 1em;
+                width: 100%;
+                margin-bottom: 10px;
             }
             
             .btn-secondary {
                 margin-left: 0;
-                margin-top: 10px;
+                margin-top: 0;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .admin-controls input, .admin-controls select {
+                min-width: 100%;
+                width: 100%;
+                margin-bottom: 0;
+            }
+            
+            .admin-controls button {
+                width: 100%;
+                margin: 0;
+            }
+            
+            .admin-toggle-btn {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px 20px;
+                font-size: 0.9em;
+            }
+            
+            .password-modal-content {
+                padding: 30px 20px;
+                margin: 20px;
+                max-width: none;
+                width: calc(100% - 40px);
+            }
+            
+            .password-modal h3 {
+                font-size: 1.3em;
+            }
+            
+            .password-modal input {
+                padding: 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .password-modal-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .password-modal-buttons .btn {
+                width: 100%;
+                margin: 0 !important;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            table {
+                font-size: 0.85em;
+                min-width: 600px;
+            }
+            
+            th, td {
+                padding: 8px 6px;
+                white-space: nowrap;
+            }
+            
+            .admin-section .header {
+                padding: 15px;
+            }
+            
+            .admin-section .header h1 {
+                font-size: 1.6em;
+            }
+            
+            .admin-section .content {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 1.4em;
+            }
+            
+            h3 {
+                font-size: 1.2em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .header-logo {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .offer-card {
+                padding: 15px;
+            }
+            
+            .offer-card h3 {
+                font-size: 1.2em;
+            }
+            
+            .btn {
+                padding: 12px 25px;
+                font-size: 0.95em;
+            }
+            
+            .admin-toggle-btn {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+            
+            .password-modal-content {
+                padding: 25px 15px;
+            }
+            
+            table {
+                font-size: 0.8em;
+            }
+            
+            th, td {
+                padding: 6px 4px;
             }
         }
     </style>
