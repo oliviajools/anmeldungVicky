@@ -1,0 +1,439 @@
+Goal of the website: für die Fußballmädchenabteilung meines Fußballvereins möchte ich eine Seite programmieren, auf der Eltern ihre Tochter für ein Angebot wöchentlich anmelden können. Es soll so niedrigschwellig und simpel wie möglich sein. Folgende Angebote gibt es: Individualtraining am Montag und Hausaufgabenhilfe am Donnersag. Es soll die Möglichkeit geben als Administrator die Anmeldungen einzusehen. 
+
+## 📦 Was du bekommst
+
+* **Eine statische Webseite** (`index.html`) für Eltern
+* **Ein kleines Backend über Google Apps Script** (`Code.gs`) mit Anbindung an eine Google‑Tabelle
+* **Admin‑Ansicht** (passwortgeschützt per einfachem Passcode) zum Einsehen/Filtern/Exportieren
+
+> Vorteile: keine Serverpflege, kostenlos, schnell eingerichtet. Du kannst das später leicht erweitern (weitere Angebote, Zeiten, Limitierungen, E‑Mail‑Bestätigungen usw.).
+
+---
+
+## 🧱 Datenmodell (pro Anmeldung)
+
+* `timestamp` – automatisch
+* `kalenderwoche` – z. B. `KW 42 (2025-10-13)`
+* `kind_name`
+* `jahrgang_oder_team` – optionales Freifeld
+* `eltern_name`
+* `kontakt_email`
+* `kontakt_tel` – optional
+* `mo_individualtraining` – `true/false`
+* `do_hausaufgabenhilfe` – `true/false`
+* `bemerkungen` – optional
+
+---
+
+## 1) Google‑Tabelle anlegen
+
+1. In Google Drive **neue Tabelle** erstellen, z. B. **„Anmeldungen Fußballmädchen“**.
+2. Erste Zeile (Kopfzeile) exakt so anlegen:
+
+   ```
+   timestamp	kalenderwoche	kind_name	jahrgang_oder_team	eltern_name	kontakt_email	kontakt_tel	mo_individualtraining	do_hausaufgabenhilfe	bemerkungen
+   ```
+
+---
+
+## 2) Apps Script Backend erstellen (`Code.gs`)
+
+1. In der Tabelle: **Erweiterungen → Apps Script** öffnen.
+2. Datei `Code.gs` anlegen und **folgenden Code** einfügen:
+
+```javascript
+/**
+ * Minimaler Backend‑Endpunkt für Anmeldungen.
+ * Schreibt in die aktive Google‑Tabelle (erste Tabelle).
+ * Bietet eine Admin‑Liste als JSON über doGet?action=list&passcode=... an.
+ */
+
+const ADMIN_PASSCODE = 'ÄNDERN_DU_PASSWORT'; // <— bitte anpassen
+
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const body = JSON.parse(e.postData.contents);
+
+    // Sicherheit: Felder whitelisten
+    const now = new Date();
+    const values = [
+      now,
+      body.kalenderwoche || '',
+      body.kind_name?.trim() || '',
+      body.jahrgang_oder_team?.trim() || '',
+      body.eltern_name?.trim() || '',
+      body.kontakt_email?.trim() || '',
+      body.kontakt_tel?.trim() || '',
+      body.mo_individualtraining ? true : false,
+      body.do_hausaufgabenhilfe ? true : false,
+      body.bemerkungen?.trim() || ''
+    ];
+
+    sheet.appendRow(values);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  const action = (e.parameter.action || '').toLowerCase();
+  if (action === 'list') {
+    const pass = e.parameter.passcode || '';
+    if (pass !== ADMIN_PASSCODE) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ ok: false, error: 'Unauthorized' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const rows = sheet.getDataRange().getValues();
+    const headers = rows.shift();
+    const data = rows.map(r => Object.fromEntries(headers.map((h, i) => [String(h), r[i]])));
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: true, data }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true, message: 'Service läuft' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+```
+
+3. **Bereitstellen**: `Bereitstellen → Als Web‑App bereitstellen`:
+
+   * Beschreibung beliebig
+   * **Ausführen als:** *Ich selbst*
+   * **Zugriff:** *Jeder, der den Link kennt*
+   * **Bereitstellen** und die **Web‑App‑URL** kopieren (z. B. `https://script.google.com/.../exec`).
+
+> Merke dir den **Passcode** (oben im Code) – den brauchst du für die Admin‑Ansicht in der Webseite.
+
+---
+
+## 3) Webseite für Eltern (`index.html`)
+
+> Diese Datei ist komplett statisch. Du kannst sie auf GitHub Pages, Netlify, Vercel, im Vereins‑CMS oder einfach per Doppelklick lokal betreiben.
+
+```html
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fußballmädchen – Wochen-Anmeldung</title>
+  <style>
+    :root { --gap: 12px; }
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+    body { margin: 0; background: #f6f7fb; color: #111; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 24px; }
+    .card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 6px 18px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 1.6rem; }
+    p.hint { margin-top: 0; color: #555; }
+    form { display: grid; gap: var(--gap); }
+    .row { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .row.two { grid-template-columns: 1fr 1fr; } }
+    label { font-weight: 600; font-size: .95rem; }
+    input[type="text"], input[type="email"], input[type="tel"], textarea, select, input[type="week"] {
+      width: 100%; padding: 12px 14px; border: 1px solid #d9dbe8; border-radius: 12px; background: #fafbff;
+    }
+    textarea { min-height: 80px; }
+    .checks { display: grid; grid-auto-flow: row; gap: 8px; }
+    .checks label { font-weight: 500; display: flex; gap: 10px; align-items: center; }
+    .btn { appearance: none; border: 0; border-radius: 12px; padding: 12px 16px; font-weight: 700; cursor: pointer; }
+    .btn.primary { background: #1d4ed8; color: #fff; }
+    .btn.ghost { background: transparent; border: 1px solid #cfd3ea; }
+    .flex { display: flex; gap: 12px; align-items: center; }
+    .center { text-align: center; }
+    .success, .error { padding: 12px 14px; border-radius: 12px; }
+    .success { background: #e7f8ee; color: #0b6b3a; }
+    .error { background: #ffe8e8; color: #9b1c1c; }
+    /* Admin */
+    details.admin { margin-top: 24px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; font-size: .92rem; }
+    th { white-space: nowrap; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+    .badge { padding: 2px 8px; border-radius: 999px; background: #eef2ff; color: #312e81; font-size: .8rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Wöchentliche Anmeldung – Fußballmädchen</h1>
+      <p class="hint">Bitte meldet eure Tochter für die Angebote dieser Woche an. Die Anmeldung ist jeweils **für die kommende Kalenderwoche** gedacht.</p>
+
+      <form id="signupForm">
+        <div class="row two">
+          <div>
+            <label for="kw">Kalenderwoche</label>
+            <input type="week" id="kw" name="kw" required />
+          </div>
+          <div>
+            <label for="team">Jahrgang / Team (optional)</label>
+            <input type="text" id="team" name="team" placeholder="z. B. D‑Juniorinnen" />
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label for="kind">Name des Kindes</label>
+            <input type="text" id="kind" name="kind" required />
+          </div>
+          <div>
+            <label for="eltern">Name Erziehungsberechtigte*r</label>
+            <input type="text" id="eltern" name="eltern" required />
+          </div>
+        </div>
+
+        <div class="row two">
+          <div>
+            <label for="email">E‑Mail</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div>
+            <label for="tel">Telefon (optional)</label>
+            <input type="tel" id="tel" name="tel" />
+          </div>
+        </div>
+
+        <div>
+          <label>Angebote dieser Woche</label>
+          <div class="checks">
+            <label><input type="checkbox" id="mo" /> Mo: Individualtraining</label>
+            <label><input type="checkbox" id="do" /> Do: Hausaufgabenhilfe</label>
+          </div>
+        </div>
+
+        <div>
+          <label for="notes">Bemerkungen (optional)</label>
+          <textarea id="notes" name="notes" placeholder="Allergien, Abholung, Sonstiges…"></textarea>
+        </div>
+
+        <div class="flex">
+          <button class="btn primary" type="submit">Verbindlich anmelden</button>
+          <button class="btn ghost" type="reset">Zurücksetzen</button>
+          <span id="status" class="badge" hidden>…</span>
+        </div>
+        <div id="feedback"></div>
+      </form>
+
+      <details class="admin">
+        <summary>🔐 Admin‑Ansicht</summary>
+        <div class="row two" style="margin-top:12px;">
+          <div>
+            <label for="adminPass">Passcode</label>
+            <input type="text" id="adminPass" placeholder="Admin‑Passcode" />
+          </div>
+          <div>
+            <label for="filterKw">Filtern nach Kalenderwoche (optional)</label>
+            <input type="text" id="filterKw" placeholder="z. B. KW 42" />
+          </div>
+        </div>
+        <div class="toolbar">
+          <button class="btn" id="btnLoad">Anmeldungen laden</button>
+          <button class="btn" id="btnExport">Als CSV exportieren</button>
+        </div>
+        <div style="overflow:auto;">
+          <table id="tbl" hidden>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>KW</th>
+                <th>Kind</th>
+                <th>Team</th>
+                <th>Eltern</th>
+                <th>Email</th>
+                <th>Tel</th>
+                <th>Mo</th>
+                <th>Do</th>
+                <th>Bemerkungen</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <script>
+    // 👉 HIER die URL deiner bereitgestellten Apps‑Script Web‑App eintragen
+    const ENDPOINT = 'HIER_DEINE_WEBAPP_URL_EINFÜGEN';
+
+    // Hilfsfunktionen
+    const $ = (sel) => document.querySelector(sel);
+    const status = (msg) => { const el = $('#status'); el.textContent = msg; el.hidden = !msg; };
+
+    // Kalenderwoche als lesbarer String
+    function kwToLabel(weekValue) { // weekValue: "2025-W42"
+      if (!weekValue) return '';
+      const [y, wk] = weekValue.split('-W');
+      // Montag der ISO‑Woche ermitteln
+      const simple = new Date(Date.UTC(parseInt(y), 0, 1 + (parseInt(wk) - 1) * 7));
+      const dow = simple.getUTCDay();
+      const isoMonday = new Date(simple);
+      const diff = (dow === 0 ? -6 : 1) - dow; // auf Montag schieben
+      isoMonday.setUTCDate(simple.getUTCDate() + diff);
+      const isoStr = isoMonday.toISOString().slice(0,10);
+      return `KW ${wk} (${isoStr})`;
+    }
+
+    // Formular absenden
+    $('#signupForm').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const payload = {
+        kalenderwoche: kwToLabel($('#kw').value),
+        kind_name: $('#kind').value.trim(),
+        jahrgang_oder_team: $('#team').value.trim(),
+        eltern_name: $('#eltern').value.trim(),
+        kontakt_email: $('#email').value.trim(),
+        kontakt_tel: $('#tel').value.trim(),
+        mo_individualtraining: $('#mo').checked,
+        do_hausaufgabenhilfe: $('#do').checked,
+        bemerkungen: $('#notes').value.trim()
+      };
+
+      if (!payload.mo_individualtraining && !payload.do_hausaufgabenhilfe) {
+        $('#feedback').innerHTML = '<div class="error">Bitte wähle mindestens ein Angebot (Mo oder Do).</div>';
+        return;
+      }
+
+      status('senden…');
+      $('#feedback').innerHTML = '';
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.ok) {
+          $('#signupForm').reset();
+          $('#feedback').innerHTML = '<div class="success">Danke! Die Anmeldung wurde gespeichert.</div>';
+        } else {
+          $('#feedback').innerHTML = `<div class="error">Fehler: ${data.error || 'Unbekannt'}</div>`;
+        }
+      } catch (err) {
+        $('#feedback').innerHTML = `<div class="error">Netzwerkfehler: ${String(err)}</div>`;
+      } finally {
+        status('');
+      }
+    });
+
+    // Admin: Daten laden
+    $('#btnLoad').addEventListener('click', async () => {
+      const pass = $('#adminPass').value.trim();
+      if (!pass) return alert('Passcode eingeben.');
+      status('lädt…');
+      try {
+        const url = new URL(ENDPOINT);
+        url.searchParams.set('action', 'list');
+        url.searchParams.set('passcode', pass);
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.ok) throw new Error(data.error || 'Fehler');
+        renderTable(data.data);
+      } catch (err) {
+        alert('Admin‑Fehler: ' + String(err));
+      } finally {
+        status('');
+      }
+    });
+
+    // Admin: CSV Export
+    $('#btnExport').addEventListener('click', () => {
+      const rows = [...document.querySelectorAll('#tbl tbody tr')].map(tr =>
+        [...tr.children].map(td => '"' + String(td.textContent).replaceAll('"', '""') + '"').join(',')
+      );
+      if (!rows.length) return alert('Bitte zuerst Daten laden.');
+      const header = [...document.querySelectorAll('#tbl thead th')].map(th => '"' + th.textContent + '"').join(',');
+      const csv = [header, ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'anmeldungen.csv';
+      a.click();
+    });
+
+    function renderTable(items) {
+      const kwFilter = $('#filterKw').value.trim().toLowerCase();
+      const tbody = $('#tbl tbody');
+      tbody.innerHTML = '';
+      (items || [])
+        .filter(it => kwFilter ? String(it.kalenderwoche || '').toLowerCase().includes(kwFilter) : true)
+        .forEach(it => {
+          const tr = document.createElement('tr');
+          const cells = [
+            it.timestamp ? new Date(it.timestamp).toLocaleString() : '',
+            it.kalenderwoche || '',
+            it.kind_name || '',
+            it.jahrgang_oder_team || '',
+            it.eltern_name || '',
+            it.kontakt_email || '',
+            it.kontakt_tel || '',
+            it.mo_individualtraining ? 'Ja' : '-',
+            it.do_hausaufgabenhilfe ? 'Ja' : '-',
+            it.bemerkungen || ''
+          ];
+          tr.innerHTML = cells.map(c => `<td>${c}</td>`).join('');
+          tbody.appendChild(tr);
+        });
+      $('#tbl').hidden = false;
+    }
+
+    // Komfort: aktuelle/kommende KW vorbelegen
+    (function prefillWeek(){
+      const now = new Date();
+      // auf kommende Woche runden (Montag‑Start)
+      const day = (now.getDay() + 6) % 7; // Mo=0..So=6
+      const nextMonday = new Date(now);
+      nextMonday.setDate(now.getDate() + (7 - day));
+      const y = nextMonday.getFullYear();
+      // ISO Woche berechnen
+      const jan4 = new Date(Date.UTC(y,0,4));
+      const dayNr = (nextMonday - new Date(Date.UTC(y,0,1))) / 86400000 + 1;
+      const week = Math.ceil((dayNr + ((jan4.getUTCDay()+6)%7)) / 7);
+      const wk = String(week).padStart(2,'0');
+      $('#kw').value = `${y}-W${wk}`;
+    })();
+  </script>
+</body>
+</html>
+```
+
+---
+
+## 4) Deployment‑Checkliste
+
+* In `Code.gs` **ADMIN_PASSCODE** setzen.
+* Als Web‑App **bereitstellen** und **URL kopieren**.
+* In `index.html` die Konstante **`ENDPOINT`** mit dieser URL ersetzen.
+* `index.html` hochladen/veröffentlichen (z. B. GitHub Pages). Fertig.
+
+---
+
+## 🔐 Datenschutz‑Hinweise (kurz)
+
+* Holt euch eine **Einwilligung** (z. B. im Formulartext), dass die Daten zur Organisation der Angebote gespeichert/verarbeitet werden.
+* In Google‑Tabelle: Zugriffe auf Vereins‑Accounts beschränken.
+* Vermeidet unnötige Daten (Telefon optional, keine Geburtstage etc.).
+
+---
+
+## ✨ Erweiterungen (optional, später)
+
+* Max. Plätze je Angebot & automatische Sperre bei Vollauslastung
+* Bestätigungs‑E‑Mail an Eltern (über Apps Script `MailApp.sendEmail`)
+* Export pro KW als PDF/CSV
+* Eigene Subseite je Angebot mit Infos/Zeiten
+* QR‑Code zur schnellen Anmeldung
+
+Wenn du willst, passe ich dir **Texte/Styling** ans Vereins‑CI an oder ergänze weitere Felder/Regeln (z. B. Frist: immer bis Sonntag 18:00 Uhr).

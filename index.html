@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vicky Anmeldungsseite - Sporttraining</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5; /* Light grey background */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #102C78; /* Vicky Blue */
+            color: #FDE100; /* Vicky Yellow */
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input[type="text"], input[type="email"], input[type="tel"], textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #102C78; /* Vicky Blue */
+            background: white;
+            box-shadow: 0 0 0 3px rgba(16, 44, 120, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            accent-color: #102C78; /* Vicky Blue */
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .offer-selection {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .offer-card {
+            display: inline-block;
+            width: 45%;
+            padding: 40px 20px;
+            margin: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+            border-color: #102C78; /* Vicky Blue */
+        }
+
+        .offer-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .offer-card p {
+            color: #666;
+        }
+
+        .btn {
+            background: #102C78; /* Vicky Blue */
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 44, 120, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #555;
+            margin-left: 15px;
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .admin-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #102C78;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(16, 44, 120, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .admin-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 44, 120, 0.4);
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-modal.active {
+            display: flex;
+        }
+
+        .password-modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .password-modal h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .password-modal input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .password-modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .password-modal-buttons .btn {
+            margin: 0 !important;
+            flex-shrink: 0;
+        }
+
+        .admin-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .admin-controls input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .admin-controls {
+                flex-direction: column;
+            }
+            
+            .admin-controls input {
+                min-width: 100%;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="logo.png" alt="Vicky Logo" class="header-logo">
+            <h1>Angebote Mädchenabteilung</h1>
+            <p>Anmeldung für Individualtraining und Hausaufgabenhilfe</p>
+        </div>
+        
+        <div class="content">
+            <div id="messages"></div>
+
+            <!-- Step 1: Offer Selection -->
+            <div id="offer-selection" class="form-section">
+                <h2 style="margin-bottom: 30px; color: #333; font-size: 1.8em; text-align: center;">Angebot wählen</h2>
+                <div class="offer-selection">
+                    <div class="offer-card" data-offer="individual">
+                        <h3>Individualtraining</h3>
+                        <p>Gezieltes Training am Montag zur Verbesserung individueller Fähigkeiten.</p>
+                    </div>
+                    <div class="offer-card" data-offer="homework">
+                        <h3>Hausaufgabenhilfe</h3>
+                        <p>Unterstützung bei den Hausaufgaben am Donnerstag in einer ruhigen Lernumgebung.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Registration Form -->
+            <div id="form-section" class="form-section" hidden>
+                <h2 id="form-title" style="margin-bottom: 30px; color: #333; font-size: 1.8em;">Anmeldung</h2>
+                
+                <form id="registrationForm">
+                    <input type="hidden" id="selected_offer" name="selected_offer" value="">
+
+                    <div class="form-group">
+                        <label for="kw">Kalenderwoche *</label>
+                        <select id="kw" name="kalenderwoche" required></select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="kindName">Name des Kindes *</label>
+                        <input type="text" id="kindName" name="kind_name" placeholder="Vorname Nachname" required>
+                    </div>
+                                        
+                    <div class="form-group">
+                        <label for="elternName">Name eines/r Sorgeberechtigten *</label>
+                        <input type="text" id="elternName" name="eltern_name" placeholder="Vor- und Nachname" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-Mail Adresse *</label>
+                        <input type="email" id="email" name="kontakt_email" placeholder="ihre.email@beispiel.de" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefon">Telefonnummer für Notfälle</label>
+                        <input type="tel" id="telefon" name="kontakt_tel" placeholder="+49 123 456789">
+                    </div>
+                                        
+                    <div class="form-group">
+                        <label for="bemerkungen">Bemerkungen</label>
+                        <textarea id="bemerkungen" name="bemerkungen" placeholder="Zusätzliche Informationen oder besondere Wünsche..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">Anmeldung absenden</button>
+                    <button type="button" id="back-to-selection" class="btn btn-secondary">Zurück</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Section (Separate from main container) -->
+    <div class="admin-section" id="admin-section">
+        <div class="container">
+            <div class="header">
+                <img src="logo.png" alt="Vicky Logo" class="header-logo">
+                <h1>Vicky Sporttraining</h1>
+                <p>Admin-Bereich</p>
+            </div>
+            
+            <div class="content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <h2 style="color: #333; font-size: 1.8em; margin: 0;">🔐 Admin-Bereich</h2>
+                    <button type="button" id="close-admin" class="btn btn-secondary">Schließen</button>
+                </div>
+                
+                <!-- Admin Step 1: Offer Selection -->
+                <div id="admin-offer-selection">
+                    <h3 style="margin-bottom: 20px; color: #666; text-align: center;">Angebot wählen</h3>
+                    <div class="offer-selection">
+                        <div class="offer-card" data-admin-offer="individual">
+                            <h3>Individualtraining</h3>
+                            <p>Anmeldungen für Montag Individualtraining ansehen</p>
+                        </div>
+                        <div class="offer-card" data-admin-offer="homework">
+                            <h3>Hausaufgabenhilfe</h3>
+                            <p>Anmeldungen für Donnerstag Hausaufgabenhilfe ansehen</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Step 2: View Registrations -->
+                <div id="admin-view-section" hidden>
+                    <h3 id="admin-view-title" style="margin-bottom: 20px; color: #666;">Anmeldungen</h3>
+                    
+                    <div class="admin-controls">
+                        <label for="filterKw" style="font-weight: 600; color: #333;">Kalenderwoche filtern:</label>
+                        <select id="filterKw" style="flex: 1; min-width: 200px;"></select>
+                        <button type="button" id="back-to-admin-selection" class="btn btn-secondary" style="margin-left: auto;">Zurück</button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table id="tbl" hidden>
+                            <thead>
+                                <tr>
+                                    <th>Zeitstempel</th>
+                                    <th>Kalenderwoche</th>
+                                    <th>Kind</th>
+                                    <th>Eltern</th>
+                                    <th>E-Mail</th>
+                                    <th>Notfall-Telefon</th>
+                                    <th>Bemerkungen</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Toggle Button -->
+    <button id="admin-toggle" class="admin-toggle-btn">🔐 Admin</button>
+
+    <!-- Password Modal -->
+    <div id="password-modal" class="password-modal">
+        <div class="password-modal-content">
+            <h3>🔐 Admin-Zugang</h3>
+            <p style="margin-bottom: 20px; color: #666;">Bitte geben Sie das Admin-Passwort ein:</p>
+            <input type="password" id="modal-password" placeholder="Passwort">
+            <div id="modal-error" style="color: #721c24; margin-bottom: 15px; display: none;">Falsches Passwort!</div>
+            <div class="password-modal-buttons">
+                <button type="button" id="cancel-admin" class="btn btn-secondary" style="margin: 0;">Abbrechen</button>
+                <button type="button" id="verify-password" class="btn" style="margin: 0;">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Utility function for element selection
+        const $ = (selector) => document.querySelector(selector);
+
+        // Show messages to user
+        function showMessage(text, type = 'success') {
+            const messagesDiv = $('#messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.textContent = text;
+            messagesDiv.innerHTML = '';
+            messagesDiv.appendChild(messageDiv);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData.entries());
+
+            // Set training options based on the initial selection
+            const selectedOffer = data.selected_offer;
+            data.mo_individualtraining = (selectedOffer === 'individual');
+            data.do_hausaufgabenhilfe = (selectedOffer === 'homework');
+            delete data.selected_offer; // Clean up the object before sending
+            
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Wird gesendet...';
+
+            try {
+                // Replace with your Google Apps Script URL
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwxdWUg0HEyaNQS9fTHIZlLuq43Oy99CXW5wVeg3Ogiz_PD9EfQyxxrgifjAIgj-xgR/exec', {
+                    method: 'POST',
+                    mode: 'no-cors', // Required for Google Apps Script POST from browser
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8', // Workaround for no-cors
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                // With no-cors, we can't read the response, so we assume success if no network error
+                showMessage('Anmeldung erfolgreich übermittelt! Vielen Dank.', 'success');
+                this.reset();
+                setupWeekSelector(); // Re-populate the week selector after reset
+                showOfferView();
+
+            } catch (error) {
+                showMessage('Verbindungsfehler. Bitte versuchen Sie es später erneut.', 'error');
+                console.error('Error:', error);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Anmeldung absenden';
+            }
+        });
+
+        // Store current admin offer selection and password
+        let currentAdminOffer = null;
+        let adminPassword = null;
+        const ADMIN_PASSWORD = 'Vicky1885!';
+
+        // Load registrations for admin
+        async function loadRegistrations() {
+            if (!adminPassword) {
+                showMessage('Keine Admin-Berechtigung.', 'error');
+                return;
+            }
+            
+            try {
+                // Replace with your Google Apps Script URL
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbwxdWUg0HEyaNQS9fTHIZlLuq43Oy99CXW5wVeg3Ogiz_PD9EfQyxxrgifjAIgj-xgR/exec?action=list&passcode=${encodeURIComponent(adminPassword)}`);
+                const result = await response.json();
+                
+                if (result.ok) {
+                    // Filter data based on selected offer
+                    const filteredData = result.data.filter(item => {
+                        if (currentAdminOffer === 'individual') {
+                            return item.mo_individualtraining === true;
+                        } else if (currentAdminOffer === 'homework') {
+                            return item.do_hausaufgabenhilfe === true;
+                        }
+                        return false;
+                    });
+                    
+                    renderTable(filteredData);
+                    showMessage(`${filteredData.length} Anmeldungen geladen.`, 'success');
+                } else {
+                    showMessage('Fehler beim Laden: ' + (result.error || 'Unbekannter Fehler'), 'error');
+                }
+            } catch (error) {
+                showMessage('Verbindungsfehler beim Laden der Daten.', 'error');
+                console.error('Error:', error);
+            }
+        }
+
+        // Filter table by calendar week
+        function filterTable() {
+            const rows = document.querySelectorAll('#tbl tbody tr');
+            const filter = $('#filterKw').value.trim().toLowerCase();
+            
+            let visibleCount = 0;
+            rows.forEach(row => {
+                // Skip the "no data" row
+                if (row.cells.length === 1) {
+                    row.style.display = '';
+                    return;
+                }
+                
+                const kwCell = row.cells[1]; // Calendar week is in second column
+                if (!filter || kwCell.textContent.toLowerCase().includes(filter)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update message with filtered count
+            if (filter && visibleCount === 0) {
+                showMessage('Keine Anmeldungen für die ausgewählte Woche gefunden.', 'error');
+            }
+        }
+
+
+        // Render table with registration data
+        function renderTable(items) {
+            const tbody = $('#tbl tbody');
+            tbody.innerHTML = '';
+            
+            if (!items || items.length === 0) {
+                const tr = document.createElement('tr');
+                const td = document.createElement('td');
+                td.colSpan = 7;
+                td.textContent = 'Keine Anmeldungen vorhanden.';
+                td.style.textAlign = 'center';
+                td.style.padding = '30px';
+                td.style.color = '#999';
+                tr.appendChild(td);
+                tbody.appendChild(tr);
+            } else {
+                items.forEach(it => {
+                    const tr = document.createElement('tr');
+                    const cells = [
+                        it.timestamp ? new Date(it.timestamp).toLocaleString('de-DE') : '',
+                        it.kalenderwoche || '',
+                        it.kind_name || '',
+                        it.eltern_name || '',
+                        it.kontakt_email || '',
+                        it.kontakt_tel || '',
+                        it.bemerkungen || ''
+                    ];
+                    tr.innerHTML = cells.map(c => `<td>${c}</td>`).join('');
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            $('#tbl').hidden = false;
+        }
+
+        // Setup week selector with current week and 5 future weeks
+        function setupWeekSelector() {
+            const kwSelect = $('#kw');
+            kwSelect.innerHTML = ''; // Clear existing options
+
+            const formatDate = (date) => {
+                const d = String(date.getDate()).padStart(2, '0');
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const y = date.getFullYear();
+                return `${d}.${m}.${y}`;
+            }
+
+            const now = new Date();
+            const day = (now.getDay() + 6) % 7; // Mo=0..So=6
+            const currentWeekStart = new Date(now);
+            currentWeekStart.setDate(now.getDate() - day);
+            currentWeekStart.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 6; i++) { // Current week + 5 future weeks
+                const weekStart = new Date(currentWeekStart);
+                weekStart.setDate(currentWeekStart.getDate() + (i * 7));
+
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+
+                const optionText = `Woche vom ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                
+                const option = document.createElement('option');
+                option.value = optionText;
+                option.textContent = optionText;
+                kwSelect.appendChild(option);
+            }
+        }
+
+        // Setup filter week selector (for admin)
+        function setupFilterWeekSelector() {
+            const filterKwSelect = $('#filterKw');
+            filterKwSelect.innerHTML = '';
+
+            // Add "Alle Wochen" option
+            const allOption = document.createElement('option');
+            allOption.value = '';
+            allOption.textContent = 'Alle Wochen anzeigen';
+            filterKwSelect.appendChild(allOption);
+
+            const formatDate = (date) => {
+                const d = String(date.getDate()).padStart(2, '0');
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const y = date.getFullYear();
+                return `${d}.${m}.${y}`;
+            }
+
+            const now = new Date();
+            const day = (now.getDay() + 6) % 7;
+            const currentWeekStart = new Date(now);
+            currentWeekStart.setDate(now.getDate() - day);
+            currentWeekStart.setHours(0, 0, 0, 0);
+
+            for (let i = 0; i < 6; i++) {
+                const weekStart = new Date(currentWeekStart);
+                weekStart.setDate(currentWeekStart.getDate() + (i * 7));
+
+                const weekEnd = new Date(weekStart);
+                weekEnd.setDate(weekStart.getDate() + 6);
+
+                const optionText = `Woche vom ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
+                
+                const option = document.createElement('option');
+                option.value = optionText;
+                option.textContent = optionText;
+                filterKwSelect.appendChild(option);
+            }
+        }
+
+        function showOfferView() {
+            $('#offer-selection').hidden = false;
+            $('#form-section').hidden = true;
+            $('#messages').innerHTML = ''; // Clear any messages
+        }
+
+        function showFormView(offer) {
+            $('#offer-selection').hidden = true;
+            $('#form-section').hidden = false;
+            $('#selected_offer').value = offer;
+
+            const formTitle = $('#form-title');
+            if (offer === 'individual') {
+                formTitle.textContent = 'Anmeldung: Individualtraining';
+            } else if (offer === 'homework') {
+                formTitle.textContent = 'Anmeldung: Hausaufgabenhilfe';
+            }
+        }
+
+        function showAdminOfferView() {
+            $('#admin-offer-selection').hidden = false;
+            $('#admin-view-section').hidden = true;
+            $('#tbl').hidden = true;
+            $('#messages').innerHTML = '';
+        }
+
+        function showAdminView(offer) {
+            $('#admin-offer-selection').hidden = true;
+            $('#admin-view-section').hidden = false;
+            currentAdminOffer = offer;
+
+            const adminTitle = $('#admin-view-title');
+            if (offer === 'individual') {
+                adminTitle.textContent = 'Anmeldungen: Individualtraining (Montag)';
+            } else if (offer === 'homework') {
+                adminTitle.textContent = 'Anmeldungen: Hausaufgabenhilfe (Donnerstag)';
+            }
+            
+            // Setup filter week selector
+            setupFilterWeekSelector();
+            
+            // Automatically load registrations
+            loadRegistrations();
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            setupWeekSelector();
+
+            // --- Event Listeners ---
+            document.querySelectorAll('.offer-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    showFormView(card.dataset.offer);
+                });
+            });
+
+            $('#back-to-selection').addEventListener('click', showOfferView);
+
+            // Admin offer selection
+            document.querySelectorAll('[data-admin-offer]').forEach(card => {
+                card.addEventListener('click', () => {
+                    showAdminView(card.dataset.adminOffer);
+                });
+            });
+
+            $('#back-to-admin-selection').addEventListener('click', showAdminOfferView);
+
+            // Admin toggle functionality
+            $('#admin-toggle').addEventListener('click', function() {
+                $('#password-modal').classList.add('active');
+                $('#modal-password').value = '';
+                $('#modal-error').style.display = 'none';
+                $('#modal-password').focus();
+            });
+
+            // Password verification
+            $('#verify-password').addEventListener('click', function() {
+                const enteredPassword = $('#modal-password').value;
+                if (enteredPassword === ADMIN_PASSWORD) {
+                    adminPassword = enteredPassword;
+                    $('#password-modal').classList.remove('active');
+                    
+                    const adminSection = $('#admin-section');
+                    const registrationArea = document.querySelectorAll('.container')[0];
+                    adminSection.classList.add('active');
+                    registrationArea.style.display = 'none';
+                    showAdminOfferView();
+                } else {
+                    $('#modal-error').style.display = 'block';
+                    $('#modal-password').value = '';
+                    $('#modal-password').focus();
+                }
+            });
+
+            // Enter key support for password modal
+            $('#modal-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    $('#verify-password').click();
+                }
+            });
+
+            // Cancel password modal
+            $('#cancel-admin').addEventListener('click', function() {
+                $('#password-modal').classList.remove('active');
+            });
+
+            $('#close-admin').addEventListener('click', function() {
+                $('#admin-section').classList.remove('active');
+                document.querySelectorAll('.container')[0].style.display = 'block';
+                adminPassword = null; // Reset password on close
+            });
+            
+            // Filter change event
+            $('#filterKw').addEventListener('change', function() {
+                filterTable();
+            });
+        });
+    </script>
+</body>
+</html>
