@@ -33,6 +33,7 @@ function doPost(e) {
 
 function doGet(e) {
   const action = (e.parameter.action || '').toLowerCase();
+  
   if (action === 'list') {
     const pass = e.parameter.passcode || '';
     if (pass !== ADMIN_PASSCODE) {
@@ -46,6 +47,7 @@ function doGet(e) {
       const rows = sheet.getDataRange().getValues();
       const headers = rows.shift();
       const data = rows.map(r => Object.fromEntries(headers.map((h, i) => [String(h), r[i]])));
+      
       return ContentService
         .createTextOutput(JSON.stringify({ ok: true, data }))
         .setMimeType(ContentService.MimeType.JSON);
