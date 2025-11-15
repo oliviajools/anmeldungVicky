@@ -136,7 +136,7 @@
 
         .offer-card {
             display: inline-block;
-            width: 48%;
+            width: 32%;
             padding: 30px 25px;
             margin: 8px;
             border: 2px solid #e1e5e9;
@@ -889,6 +889,10 @@
                         <h3>Hausaufgabenhilfe</h3>
                         <p>Unterstützung bei den Hausaufgaben am Donnerstag in einer ruhigen Lernumgebung.</p>
                     </div>
+                    <div class="offer-card" data-offer="goalkeeper">
+                        <h3>Torwarttraining</h3>
+                        <p>Spezielles Torwarttraining zur Verbesserung der torwartspezifischen Fähigkeiten.</p>
+                    </div>
                 </div>
             </div>
             
@@ -907,26 +911,6 @@
                     <div class="form-group">
                         <label for="kindName">Name des Kindes *</label>
                         <input type="text" id="kindName" name="kind_name" placeholder="Vorname Nachname" required>
-                    </div>
-                                        
-                    <div class="form-group">
-                        <label for="elternName">Name eines/r Sorgeberechtigten *</label>
-                        <input type="text" id="elternName" name="eltern_name" placeholder="Vor- und Nachname" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">E-Mail Adresse *</label>
-                        <input type="email" id="email" name="kontakt_email" placeholder="ihre.email@beispiel.de" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="telefon">Telefonnummer für Notfälle</label>
-                        <input type="tel" id="telefon" name="kontakt_tel" placeholder="+49 123 456789">
-                    </div>
-                                        
-                    <div class="form-group">
-                        <label for="bemerkungen">Bemerkungen</label>
-                        <textarea id="bemerkungen" name="bemerkungen" placeholder="Zusätzliche Informationen oder besondere Wünsche..."></textarea>
                     </div>
                     
                     <button type="submit" class="btn">Anmeldung absenden</button>
@@ -951,7 +935,7 @@
                     <button type="button" id="close-admin" class="btn btn-secondary">Schließen</button>
                 </div>
                 
-                <!-- Admin Step 1: Offer Selection -->
+                <!-- Admin Offer Selection -->
                 <div id="admin-offer-selection">
                     <h3 style="margin-bottom: 20px; color: #666; text-align: center;">Angebot wählen</h3>
                     <div class="offer-selection">
@@ -961,36 +945,61 @@
                         </div>
                         <div class="offer-card" data-admin-offer="homework">
                             <h3>Hausaufgabenhilfe</h3>
-                            <p>Anmeldungen für Donnerstag Hausaufgabenhilfe ansehen</p>
+                            <p>Anmeldungen für Donnerstag - Hausaufgabenhilfe ansehen</p>
+                        </div>
+                        <div class="offer-card" data-admin-offer="goalkeeper">
+                            <h3>Torwarttraining</h3>
+                            <p>Anmeldungen für Torwarttraining ansehen</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Admin Step 2: View Registrations -->
-                <div id="admin-view-section" hidden>
-                    <h3 id="admin-view-title" style="margin-bottom: 20px; color: #666;">Anmeldungen</h3>
-                    
-                    <div class="admin-controls">
-                        <label for="filterKw" style="font-weight: 600; color: #333;">Kalenderwoche filtern:</label>
-                        <select id="filterKw" style="flex: 1; min-width: 200px;"></select>
-                        <button type="button" id="back-to-admin-selection" class="btn btn-secondary" style="margin-left: auto;">Zurück</button>
+                <!-- Loading Indicator -->
+                <div id="admin-loading" class="loading" style="display: none;">
+                    <p>📊 Lade Anmeldungen...</p>
+                </div>
+
+                <!-- Admin Tables Section -->
+                <div id="admin-tables-section" hidden>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                        <h3 id="admin-tables-title" style="color: #333; font-size: 1.6em; margin: 0;">📊 Anmeldungen</h3>
+                        <button type="button" id="back-to-admin-selection" class="btn btn-secondary">Zurück zur Auswahl</button>
                     </div>
                     
-                    <div class="table-container">
-                        <table id="tbl" hidden>
-                            <thead>
-                                <tr>
-                                    <th>Zeitstempel</th>
-                                    <th>Kalenderwoche</th>
-                                    <th>Kind</th>
-                                    <th>Eltern</th>
-                                    <th>E-Mail</th>
-                                    <th>Notfall-Telefon</th>
-                                    <th>Bemerkungen</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                    <!-- Current Week Table -->
+                    <div style="margin-bottom: 40px;">
+                        <h3 style="margin-bottom: 20px; color: #333; font-size: 1.5em;">📅 Anmeldungen der aktuellen Woche</h3>
+                        <div class="table-container">
+                            <table id="current-week-table">
+                                <thead>
+                                    <tr>
+                                        <th>Zeitstempel</th>
+                                        <th>Kalenderwoche</th>
+                                        <th>Kind</th>
+                                        <th>Angebot</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Future Registrations Table -->
+                    <div>
+                        <h3 style="margin-bottom: 20px; color: #333; font-size: 1.5em;">🔮 Zukünftige Anmeldungen</h3>
+                        <div class="table-container">
+                            <table id="future-table">
+                                <thead>
+                                    <tr>
+                                        <th>Zeitstempel</th>
+                                        <th>Kalenderwoche</th>
+                                        <th>Kind</th>
+                                        <th>Angebot</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1044,6 +1053,7 @@
             const selectedOffer = data.selected_offer;
             data.mo_individualtraining = (selectedOffer === 'individual');
             data.do_hausaufgabenhilfe = (selectedOffer === 'homework');
+            data.torwarttraining = (selectedOffer === 'goalkeeper');
             delete data.selected_offer; // Clean up the object before sending
             
             const submitButton = e.target.querySelector('button[type="submit"]');
@@ -1081,12 +1091,78 @@
         let adminPassword = null;
         const ADMIN_PASSWORD = 'Vicky1885!';
 
+        // Get current week string for comparison
+        function getCurrentWeekString() {
+            const now = new Date();
+            const day = (now.getDay() + 6) % 7; // Mo=0..So=6
+            const currentWeekStart = new Date(now);
+            currentWeekStart.setDate(now.getDate() - day);
+            currentWeekStart.setHours(0, 0, 0, 0);
+
+            const weekEnd = new Date(currentWeekStart);
+            weekEnd.setDate(currentWeekStart.getDate() + 6);
+
+            const formatDate = (date) => {
+                const d = String(date.getDate()).padStart(2, '0');
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const y = date.getFullYear();
+                return `${d}.${m}.${y}`;
+            }
+
+            return `Woche vom ${formatDate(currentWeekStart)} - ${formatDate(weekEnd)}`;
+        }
+
+        // Check if a week string represents a future week
+        function isWeekInFuture(weekString) {
+            if (!weekString || !weekString.includes('Woche vom')) {
+                return false;
+            }
+            
+            try {
+                // Extract start date from week string "Woche vom DD.MM.YYYY - DD.MM.YYYY"
+                const startDateStr = weekString.split(' - ')[0].replace('Woche vom ', '');
+                const [day, month, year] = startDateStr.split('.');
+                const weekStartDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+                
+                // Get current week start
+                const now = new Date();
+                const currentDay = (now.getDay() + 6) % 7; // Mo=0..So=6
+                const currentWeekStart = new Date(now);
+                currentWeekStart.setDate(now.getDate() - currentDay);
+                currentWeekStart.setHours(0, 0, 0, 0);
+                
+                return weekStartDate > currentWeekStart;
+            } catch (error) {
+                console.error('Error parsing week string:', weekString, error);
+                return false;
+            }
+        }
+
+        // Get display name for offer
+        function getOfferDisplayName(offer) {
+            switch (offer) {
+                case 'individual': return 'Individualtraining';
+                case 'homework': return 'Hausaufgabenhilfe';
+                case 'goalkeeper': return 'Torwarttraining';
+                default: return 'Unbekanntes Angebot';
+            }
+        }
+
         // Load registrations for admin
         async function loadRegistrations() {
             if (!adminPassword) {
                 showMessage('Keine Admin-Berechtigung.', 'error');
                 return;
             }
+            
+            if (!currentAdminOffer) {
+                showMessage('Kein Angebot ausgewählt.', 'error');
+                return;
+            }
+            
+            // Show loading indicator
+            $('#admin-loading').style.display = 'block';
+            $('#admin-tables-section').hidden = true;
             
             try {
                 // Simple fetch with CORS mode - Google Apps Script should handle this
@@ -1109,70 +1185,66 @@
                     // Filter data based on selected offer
                     const filteredData = result.data.filter(item => {
                         if (currentAdminOffer === 'individual') {
-                            const match = item.mo_individualtraining === true;
-                            console.log('Individual check:', item.mo_individualtraining, 'Match:', match);
-                            return match;
+                            return item.mo_individualtraining === true;
                         } else if (currentAdminOffer === 'homework') {
-                            const match = item.do_hausaufgabenhilfe === true;
-                            console.log('Homework check:', item.do_hausaufgabenhilfe, 'Match:', match);
-                            return match;
+                            return item.do_hausaufgabenhilfe === true;
+                        } else if (currentAdminOffer === 'goalkeeper') {
+                            return item.torwarttraining === true;
                         }
                         return false;
                     });
                     
                     console.log('Filtered data count:', filteredData.length);
-                    renderTable(filteredData);
-                    showMessage(`${filteredData.length} Anmeldungen geladen.`, 'success');
+                    
+                    const currentWeek = getCurrentWeekString();
+                    console.log('Current week:', currentWeek);
+                    
+                    // Separate filtered data into current week and future registrations (exclude past)
+                    const currentWeekData = filteredData.filter(item => {
+                        return item.kalenderwoche === currentWeek;
+                    });
+                    
+                    const futureData = filteredData.filter(item => {
+                        return item.kalenderwoche !== currentWeek && isWeekInFuture(item.kalenderwoche);
+                    });
+                    
+                    console.log('Current week data count:', currentWeekData.length);
+                    console.log('Future data count:', futureData.length);
+                    
+                    renderTables(currentWeekData, futureData);
+                    showMessage(`${filteredData.length} Anmeldungen für ${getOfferDisplayName(currentAdminOffer)} geladen (${currentWeekData.length} aktuelle Woche, ${futureData.length} zukünftig).`, 'success');
                 } else {
                     showMessage('Fehler beim Laden: ' + (result.error || 'Unbekannter Fehler'), 'error');
+                    renderTables([], []);
                 }
             } catch (error) {
                 showMessage('Verbindungsfehler beim Laden der Daten. Versuchen Sie es erneut.', 'error');
                 console.error('Error:', error);
-                // Fallback: show empty table
-                renderTable([]);
+                // Fallback: show empty tables
+                renderTables([], []);
+            } finally {
+                // Hide loading indicator and show tables
+                $('#admin-loading').style.display = 'none';
+                $('#admin-tables-section').hidden = false;
             }
         }
 
-        // Filter table by calendar week
-        function filterTable() {
-            const rows = document.querySelectorAll('#tbl tbody tr');
-            const filter = $('#filterKw').value.trim().toLowerCase();
-            
-            let visibleCount = 0;
-            rows.forEach(row => {
-                // Skip the "no data" row
-                if (row.cells.length === 1) {
-                    row.style.display = '';
-                    return;
-                }
-                
-                const kwCell = row.cells[1]; // Calendar week is in second column
-                if (!filter || kwCell.textContent.toLowerCase().includes(filter)) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            
-            // Update message with filtered count
-            if (filter && visibleCount === 0) {
-                showMessage('Keine Anmeldungen für die ausgewählte Woche gefunden.', 'error');
-            }
+        // Render both tables with registration data
+        function renderTables(currentWeekItems, futureItems) {
+            renderSingleTable('current-week-table', currentWeekItems, 'Keine Anmeldungen für die aktuelle Woche.');
+            renderSingleTable('future-table', futureItems, 'Keine zukünftigen Anmeldungen vorhanden.');
         }
 
-
-        // Render table with registration data
-        function renderTable(items) {
-            const tbody = $('#tbl tbody');
+        // Helper function to render a single table
+        function renderSingleTable(tableId, items, emptyMessage) {
+            const tbody = $(`#${tableId} tbody`);
             tbody.innerHTML = '';
             
             if (!items || items.length === 0) {
                 const tr = document.createElement('tr');
                 const td = document.createElement('td');
-                td.colSpan = 7;
-                td.textContent = 'Keine Anmeldungen vorhanden.';
+                td.colSpan = 4;
+                td.textContent = emptyMessage;
                 td.style.textAlign = 'center';
                 td.style.padding = '30px';
                 td.style.color = '#999';
@@ -1181,21 +1253,29 @@
             } else {
                 items.forEach(it => {
                     const tr = document.createElement('tr');
+                    
+                    // Determine offer type
+                    let offerType = '';
+                    if (it.mo_individualtraining === true) {
+                        offerType = 'Individualtraining (Mo)';
+                    } else if (it.do_hausaufgabenhilfe === true) {
+                        offerType = 'Hausaufgabenhilfe (Do)';
+                    } else if (it.torwarttraining === true) {
+                        offerType = 'Torwarttraining';
+                    } else {
+                        offerType = 'Unbekannt';
+                    }
+                    
                     const cells = [
                         it.timestamp ? new Date(it.timestamp).toLocaleString('de-DE') : '',
                         it.kalenderwoche || '',
                         it.kind_name || '',
-                        it.eltern_name || '',
-                        it.kontakt_email || '',
-                        it.kontakt_tel || '',
-                        it.bemerkungen || ''
+                        offerType
                     ];
                     tr.innerHTML = cells.map(c => `<td>${c}</td>`).join('');
                     tbody.appendChild(tr);
                 });
             }
-            
-            $('#tbl').hidden = false;
         }
 
         // Setup week selector with current week and 5 future weeks
@@ -1232,45 +1312,6 @@
             }
         }
 
-        // Setup filter week selector (for admin)
-        function setupFilterWeekSelector() {
-            const filterKwSelect = $('#filterKw');
-            filterKwSelect.innerHTML = '';
-
-            // Add "Alle Wochen" option
-            const allOption = document.createElement('option');
-            allOption.value = '';
-            allOption.textContent = 'Alle Wochen anzeigen';
-            filterKwSelect.appendChild(allOption);
-
-            const formatDate = (date) => {
-                const d = String(date.getDate()).padStart(2, '0');
-                const m = String(date.getMonth() + 1).padStart(2, '0');
-                const y = date.getFullYear();
-                return `${d}.${m}.${y}`;
-            }
-
-            const now = new Date();
-            const day = (now.getDay() + 6) % 7;
-            const currentWeekStart = new Date(now);
-            currentWeekStart.setDate(now.getDate() - day);
-            currentWeekStart.setHours(0, 0, 0, 0);
-
-            for (let i = 0; i < 6; i++) {
-                const weekStart = new Date(currentWeekStart);
-                weekStart.setDate(currentWeekStart.getDate() + (i * 7));
-
-                const weekEnd = new Date(weekStart);
-                weekEnd.setDate(weekStart.getDate() + 6);
-
-                const optionText = `Woche vom ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-                
-                const option = document.createElement('option');
-                option.value = optionText;
-                option.textContent = optionText;
-                filterKwSelect.appendChild(option);
-            }
-        }
 
         function showOfferView() {
             $('#offer-selection').hidden = false;
@@ -1288,30 +1329,27 @@
                 formTitle.textContent = 'Anmeldung: Individualtraining';
             } else if (offer === 'homework') {
                 formTitle.textContent = 'Anmeldung: Hausaufgabenhilfe';
+            } else if (offer === 'goalkeeper') {
+                formTitle.textContent = 'Anmeldung: Torwarttraining';
             }
         }
 
         function showAdminOfferView() {
             $('#admin-offer-selection').hidden = false;
-            $('#admin-view-section').hidden = true;
-            $('#tbl').hidden = true;
+            $('#admin-loading').style.display = 'none';
+            $('#admin-tables-section').hidden = true;
             $('#messages').innerHTML = '';
         }
 
         function showAdminView(offer) {
             $('#admin-offer-selection').hidden = true;
-            $('#admin-view-section').hidden = false;
+            $('#admin-loading').style.display = 'none';
+            $('#admin-tables-section').hidden = false;
             currentAdminOffer = offer;
 
-            const adminTitle = $('#admin-view-title');
-            if (offer === 'individual') {
-                adminTitle.textContent = 'Anmeldungen: Individualtraining (Montag)';
-            } else if (offer === 'homework') {
-                adminTitle.textContent = 'Anmeldungen: Hausaufgabenhilfe (Donnerstag)';
-            }
-            
-            // Setup filter week selector
-            setupFilterWeekSelector();
+            // Update the tables title
+            const tablesTitle = $('#admin-tables-title');
+            tablesTitle.textContent = `📊 ${getOfferDisplayName(offer)} - Anmeldungen`;
             
             // Automatically load registrations
             loadRegistrations();
@@ -1382,11 +1420,6 @@
                 $('#admin-section').classList.remove('active');
                 document.querySelectorAll('.container')[0].style.display = 'block';
                 adminPassword = null; // Reset password on close
-            });
-            
-            // Filter change event
-            $('#filterKw').addEventListener('change', function() {
-                filterTable();
             });
         });
     </script>
