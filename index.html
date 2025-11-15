@@ -1100,7 +1100,7 @@
 
             try {
                 // Replace with your Google Apps Script URL
-                const response = await fetch('https://script.google.com/macros/s/AKfycbxZXGzEETAUYgzTrSXWiANceplt6phOpb3z80BljixVdwg0wcAYoRT-Q-H3gvhWeyGC/exec', {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbwQ6x_0DiBTKf08tp1wnZ7NnCXjUH86ZJ42W7EoVIpt2UlNqk8ukDT5tXS5BRerna8/exec', {
                     method: 'POST',
                     mode: 'no-cors', // Required for Google Apps Script POST from browser
                     headers: {
@@ -1210,7 +1210,7 @@
             }
             
             try {
-                const response = await fetch(`https://script.google.com/macros/s/AKfycbxZXGzEETAUYgzTrSXWiANceplt6phOpb3z80BljixVdwg0wcAYoRT-Q-H3gvhWeyGC/exec?action=delete&timestamp=${encodeURIComponent(timestamp)}&passcode=${encodeURIComponent(adminPassword)}`);
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbwQ6x_0DiBTKf08tp1wnZ7NnCXjUH86ZJ42W7EoVIpt2UlNqk8ukDT5tXS5BRerna8/exec?action=delete&timestamp=${encodeURIComponent(timestamp)}&passcode=${encodeURIComponent(adminPassword)}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -1249,7 +1249,7 @@
             
             try {
                 // Simple fetch with CORS mode - Google Apps Script should handle this
-                const response = await fetch(`https://script.google.com/macros/s/AKfycbxZXGzEETAUYgzTrSXWiANceplt6phOpb3z80BljixVdwg0wcAYoRT-Q-H3gvhWeyGC/exec?action=list&passcode=${encodeURIComponent(adminPassword)}`);
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbwQ6x_0DiBTKf08tp1wnZ7NnCXjUH86ZJ42W7EoVIpt2UlNqk8ukDT5tXS5BRerna8/exec?action=list&passcode=${encodeURIComponent(adminPassword)}`);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
