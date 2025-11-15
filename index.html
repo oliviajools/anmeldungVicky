@@ -136,19 +136,23 @@
 
         .offer-card {
             display: inline-block;
-            width: 32%;
-            padding: 30px 25px;
-            margin: 8px;
+            width: 30%;
+            padding: 35px 20px;
+            margin: 1.5%;
             border: 2px solid #e1e5e9;
-            border-radius: 10px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             background: #f8f9fa;
-            min-height: auto;
+            min-height: 200px;
             overflow: hidden;
-            word-wrap: break-word;
             box-sizing: border-box;
+            vertical-align: top;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
         .offer-card:hover {
@@ -158,38 +162,44 @@
         }
 
         .offer-card h3 {
-            font-size: 1.6em;
-            margin-bottom: 12px;
+            font-size: 1.4em;
+            margin-bottom: 15px;
             color: #333;
-            line-height: 1.2;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
+            line-height: 1.3;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
         }
 
         .offer-card p {
             color: #666;
-            line-height: 1.4;
+            line-height: 1.5;
             margin: 0;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
-            font-size: 1.1em;
+            font-size: 1em;
+            max-width: 100%;
+            word-wrap: normal;
+            overflow-wrap: normal;
+            hyphens: none;
         }
 
         .btn {
             background: #102C78; /* Vicky Blue */
             color: white;
             border: none;
-            padding: 18px 40px;
-            border-radius: 50px;
-            font-size: 1.1em;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1em;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            min-height: 50px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
@@ -410,17 +420,20 @@
             }
             
             .offer-card h3 {
-                font-size: 1.45em;
-                margin-bottom: 10px;
-                line-height: 1.2;
+                font-size: 1.3em;
+                margin-bottom: 12px;
+                line-height: 1.3;
                 font-weight: 600;
-                hyphens: auto;
+                white-space: normal;
+                word-break: keep-all;
+                overflow-wrap: normal;
             }
             
             .offer-card p {
-                font-size: 1.05em;
-                line-height: 1.3;
-                hyphens: auto;
+                font-size: 1em;
+                line-height: 1.4;
+                word-break: keep-all;
+                overflow-wrap: normal;
             }
             
             .form-group {
@@ -447,12 +460,15 @@
             }
             
             .btn {
-                padding: 18px 30px;
-                font-size: 1.1em;
+                padding: 15px 25px;
+                font-size: 1em;
                 width: 100%;
                 margin-bottom: 15px;
-                border-radius: 10px;
+                border-radius: 25px;
                 min-height: 50px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             
             .btn-secondary {
@@ -637,17 +653,18 @@
             }
             
             .offer-card h3 {
-                font-size: 1.3em;
-                margin-bottom: 8px;
-                line-height: 1.2;
+                font-size: 1.2em;
+                margin-bottom: 10px;
+                line-height: 1.3;
                 font-weight: 600;
-                hyphens: auto;
+                white-space: normal;
+                word-break: keep-all;
             }
             
             .offer-card p {
-                font-size: 0.95em;
-                line-height: 1.3;
-                hyphens: auto;
+                font-size: 0.9em;
+                line-height: 1.4;
+                word-break: keep-all;
             }
             
             .form-group {
@@ -820,17 +837,18 @@
             }
             
             .offer-card h3 {
-                font-size: 1.15em;
-                margin-bottom: 6px;
-                line-height: 1.1;
+                font-size: 1.1em;
+                margin-bottom: 8px;
+                line-height: 1.2;
                 font-weight: 600;
-                hyphens: auto;
+                white-space: normal;
+                word-break: keep-all;
             }
             
             .offer-card p {
-                font-size: 0.9em;
-                line-height: 1.2;
-                hyphens: auto;
+                font-size: 0.85em;
+                line-height: 1.3;
+                word-break: keep-all;
             }
             
             input[type="text"], input[type="email"], input[type="tel"], textarea, select {
@@ -930,9 +948,12 @@
             </div>
             
             <div class="content">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
                     <h2 style="color: #333; font-size: 1.8em; margin: 0;">🔐 Admin-Bereich</h2>
-                    <button type="button" id="close-admin" class="btn btn-secondary">Schließen</button>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <button type="button" id="super-admin-toggle" class="btn" style="background: #dc3545; padding: 12px 20px; font-size: 0.9em;">🗑️ Datenbank-Verwaltung</button>
+                        <button type="button" id="close-admin" class="btn btn-secondary" style="padding: 12px 20px; font-size: 0.9em;">Schließen</button>
+                    </div>
                 </div>
                 
                 <!-- Admin Offer Selection -->
@@ -961,9 +982,9 @@
 
                 <!-- Admin Tables Section -->
                 <div id="admin-tables-section" hidden>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
                         <h3 id="admin-tables-title" style="color: #333; font-size: 1.6em; margin: 0;">📊 Anmeldungen</h3>
-                        <button type="button" id="back-to-admin-selection" class="btn btn-secondary">Zurück zur Auswahl</button>
+                        <button type="button" id="back-to-admin-selection" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9em;">← Zurück zur Auswahl</button>
                     </div>
                     
                     <!-- Current Week Table -->
@@ -977,6 +998,7 @@
                                         <th>Kalenderwoche</th>
                                         <th>Kind</th>
                                         <th>Angebot</th>
+                                        <th id="current-week-actions-header" style="display: none;">Aktionen</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -995,6 +1017,7 @@
                                         <th>Kalenderwoche</th>
                                         <th>Kind</th>
                                         <th>Angebot</th>
+                                        <th id="future-actions-header" style="display: none;">Aktionen</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -1019,6 +1042,21 @@
             <div class="password-modal-buttons">
                 <button type="button" id="cancel-admin" class="btn btn-secondary" style="margin: 0;">Abbrechen</button>
                 <button type="button" id="verify-password" class="btn" style="margin: 0;">Bestätigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Super Admin Modal -->
+    <div id="super-admin-modal" class="password-modal">
+        <div class="password-modal-content">
+            <h3>🗑️ Datenbank-Verwaltung</h3>
+            <p style="margin-bottom: 20px; color: #666;">Warnung: Diese Funktion ermöglicht das Löschen von Datenbankeinträgen!</p>
+            <p style="margin-bottom: 20px; color: #dc3545; font-weight: bold;">Super-Admin Passwort erforderlich:</p>
+            <input type="password" id="super-admin-password" placeholder="Super-Admin Passwort">
+            <div id="super-admin-error" style="color: #721c24; margin-bottom: 15px; display: none;">Falsches Super-Admin Passwort!</div>
+            <div class="password-modal-buttons">
+                <button type="button" id="cancel-super-admin" class="btn btn-secondary" style="margin: 0;">Abbrechen</button>
+                <button type="button" id="verify-super-admin" class="btn" style="margin: 0; background: #dc3545;">Zugang gewähren</button>
             </div>
         </div>
     </div>
@@ -1089,7 +1127,9 @@
         // Store current admin offer selection and password
         let currentAdminOffer = null;
         let adminPassword = null;
+        let superAdminAccess = false;
         const ADMIN_PASSWORD = 'Vicky1885!';
+        const SUPER_ADMIN_PASSWORD = 'VickySuperAdmin2024!';
 
         // Get current week string for comparison
         function getCurrentWeekString() {
@@ -1145,6 +1185,49 @@
                 case 'homework': return 'Hausaufgabenhilfe';
                 case 'goalkeeper': return 'Torwarttraining';
                 default: return 'Unbekanntes Angebot';
+            }
+        }
+
+        // Confirm deletion of a database entry
+        function confirmDelete(timestamp, kindName, tableId, index) {
+            if (!superAdminAccess) {
+                showMessage('Keine Berechtigung für diese Aktion.', 'error');
+                return;
+            }
+            
+            const confirmMessage = `Sind Sie sicher, dass Sie die Anmeldung von "${kindName}" (${new Date(timestamp).toLocaleString('de-DE')}) unwiderruflich löschen möchten?`;
+            
+            if (confirm(confirmMessage)) {
+                deleteEntry(timestamp, kindName, tableId, index);
+            }
+        }
+
+        // Delete entry from database
+        async function deleteEntry(timestamp, kindName, tableId, index) {
+            if (!superAdminAccess || !adminPassword) {
+                showMessage('Keine Berechtigung für diese Aktion.', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://script.google.com/macros/s/AKfycbxZXGzEETAUYgzTrSXWiANceplt6phOpb3z80BljixVdwg0wcAYoRT-Q-H3gvhWeyGC/exec?action=delete&timestamp=${encodeURIComponent(timestamp)}&passcode=${encodeURIComponent(adminPassword)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    showMessage(`Anmeldung von "${kindName}" erfolgreich gelöscht.`, 'success');
+                    // Reload the current data to refresh the tables
+                    loadRegistrations();
+                } else {
+                    showMessage('Fehler beim Löschen: ' + (result.error || 'Unbekannter Fehler'), 'error');
+                }
+            } catch (error) {
+                showMessage('Verbindungsfehler beim Löschen. Versuchen Sie es erneut.', 'error');
+                console.error('Delete error:', error);
             }
         }
 
@@ -1240,10 +1323,15 @@
             const tbody = $(`#${tableId} tbody`);
             tbody.innerHTML = '';
             
+            // Show/hide actions header based on super admin access
+            const actionsHeader = tableId === 'current-week-table' ? 
+                $('#current-week-actions-header') : $('#future-actions-header');
+            actionsHeader.style.display = superAdminAccess ? 'table-cell' : 'none';
+            
             if (!items || items.length === 0) {
                 const tr = document.createElement('tr');
                 const td = document.createElement('td');
-                td.colSpan = 4;
+                td.colSpan = superAdminAccess ? 5 : 4;
                 td.textContent = emptyMessage;
                 td.style.textAlign = 'center';
                 td.style.padding = '30px';
@@ -1251,7 +1339,7 @@
                 tr.appendChild(td);
                 tbody.appendChild(tr);
             } else {
-                items.forEach(it => {
+                items.forEach((it, index) => {
                     const tr = document.createElement('tr');
                     
                     // Determine offer type
@@ -1272,6 +1360,13 @@
                         it.kind_name || '',
                         offerType
                     ];
+                    
+                    // Add delete button if super admin access is enabled
+                    if (superAdminAccess) {
+                        const deleteButton = `<button class="btn" style="background: #dc3545; color: white; padding: 5px 10px; font-size: 0.8em;" onclick="confirmDelete('${it.timestamp}', '${it.kind_name}', '${tableId}', ${index})">🗑️ Löschen</button>`;
+                        cells.push(deleteButton);
+                    }
+                    
                     tr.innerHTML = cells.map(c => `<td>${c}</td>`).join('');
                     tbody.appendChild(tr);
                 });
@@ -1377,6 +1472,53 @@
 
             $('#back-to-admin-selection').addEventListener('click', showAdminOfferView);
 
+            // Super Admin toggle functionality
+            $('#super-admin-toggle').addEventListener('click', function() {
+                if (!adminPassword) {
+                    showMessage('Sie müssen zuerst als Admin angemeldet sein.', 'error');
+                    return;
+                }
+                $('#super-admin-modal').classList.add('active');
+                $('#super-admin-password').value = '';
+                $('#super-admin-error').style.display = 'none';
+                $('#super-admin-password').focus();
+            });
+
+            // Super Admin password verification
+            $('#verify-super-admin').addEventListener('click', function() {
+                const enteredPassword = $('#super-admin-password').value;
+                if (enteredPassword === SUPER_ADMIN_PASSWORD) {
+                    superAdminAccess = true;
+                    $('#super-admin-modal').classList.remove('active');
+                    showMessage('Super-Admin Zugang gewährt. Lösch-Funktionen sind jetzt verfügbar.', 'success');
+                    
+                    // Update button text to show active status
+                    $('#super-admin-toggle').textContent = '🗑️ Datenbank-Verwaltung (AKTIV)';
+                    $('#super-admin-toggle').style.background = '#28a745';
+                    
+                    // Reload current data to show delete buttons
+                    if (currentAdminOffer) {
+                        loadRegistrations();
+                    }
+                } else {
+                    $('#super-admin-error').style.display = 'block';
+                    $('#super-admin-password').value = '';
+                    $('#super-admin-password').focus();
+                }
+            });
+
+            // Enter key support for super admin modal
+            $('#super-admin-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    $('#verify-super-admin').click();
+                }
+            });
+
+            // Cancel super admin modal
+            $('#cancel-super-admin').addEventListener('click', function() {
+                $('#super-admin-modal').classList.remove('active');
+            });
+
             // Admin toggle functionality
             $('#admin-toggle').addEventListener('click', function() {
                 $('#password-modal').classList.add('active');
@@ -1420,6 +1562,11 @@
                 $('#admin-section').classList.remove('active');
                 document.querySelectorAll('.container')[0].style.display = 'block';
                 adminPassword = null; // Reset password on close
+                superAdminAccess = false; // Reset super admin access
+                
+                // Reset super admin button
+                $('#super-admin-toggle').textContent = '🗑️ Datenbank-Verwaltung';
+                $('#super-admin-toggle').style.background = '#dc3545';
             });
         });
     </script>
